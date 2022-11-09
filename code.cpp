@@ -1,15 +1,20 @@
+// Niti Shyamsukha 2021csb118
+// Rhitvik Anand 2021csb1127
+// Ihita Sinha 2021csb1095
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
-#include <string.h>
+#include <string>
 using namespace std;
-
+int mytree_universe_size; //setting size of vEB tree.
+string blank="\n";
 struct student_data {
   int roll_number;
   char name[20];
   // college preference data
   int *preference;
+  int college_allotted;
 };
 typedef struct student_data *studentptr;
 // veb tree define
@@ -63,7 +68,12 @@ int idx(int x, int y, int big_u) {
 }
 // 4. VEB Minimum
 int veb_minimum(vebtree *V) { return V->min; }
-// 5. Function to insert an element into the veb tree.
+// 5. VEB Maximum
+int veb_maximum(vebtree *V)
+{
+  return V->max;
+}
+// 6. Function to insert an element into the veb tree.
 void insert(vebtree *V, int k, studentptr person1) {
     if (V->min == -1) {
         V->min = k;
@@ -96,76 +106,209 @@ void insert(vebtree *V, int k, studentptr person1) {
         }
     }
 }
-// 6. Is element 'x' present in veb tree?
-int veb_members_check(vebtree *A, int x) {
-    if (x == A->min || x == A->max) {
+// 7. Is element 'x' present in veb tree?
+int veb_members_check(vebtree *A, int x) 
+{
+    if (x == A->min) 
+    {
+      cout<<"Student Name: "<<A->min_student->name;
+      cout<<"Student Roll Number: "<<A->min_student->roll_number<<'\n';
+      if ((A->min_student->college_allotted)==-1)
+      {
+        printf("No college allotted.\n");
+      }
+      else printf("Code of College and Course Allotted: %d.\n", A->min_student->college_allotted);
       return 1;
-    } else if (A->u == 2) {
+    } 
+    else if (x == A->max)
+    { 
+      cout<<"Student Name: "<<A->max_student->name;
+      cout<<"Student Roll Number: "<<A->max_student->roll_number<<'\n';
+      if ((A->max_student->college_allotted)==-1)
+      {
+        printf("No college allotted.\n");
+      }
+      else printf("Code of College and Course Allotted: %d.\n", A->max_student->college_allotted);
+      return 1;
+    }
+    else if (A->u == 2) 
+    {
       return 0;
-    } else {
+    }
+    else 
+    {
       return veb_members_check(A->cluster[high(x, A->u)], low(x, A->u));
     }
 }
-// 7. Reading until comma from the file
-void reader(FILE *input, char *a)
+// 8. Successor of element 'x' in vEB tree.
+int veb_tree_successor(vebtree *V, int x)
 {
+  if (V->u==2)
+  {
+    if (x==0 && V->max==1)
+    {
+      return 1;
+    }
+    else return -1;
+  }
+  else if ((V->min!=-1) && (x<V->min))
+  {
+    return V->min;
+  }
+  else
+  {
+    int max_in_cluster=veb_maximum(V->cluster[high(x,V->u)]);
+    if (max_in_cluster!=-1 && low(x, V->u)<max_in_cluster)
+    {
+      int offset=veb_tree_successor(V->cluster[high(x,V->u)], low(x, V->u));
+      return idx(high(x, V->u), offset, mytree_universe_size);
+    }
+    else
+    {
+      int successor_cluster=veb_tree_successor(V->summary, high(x, V->u));
+      if (successor_cluster==-1)
+      {
+        return -1;
+      }
+      else
+      {
+        int offset=veb_minimum(V->cluster[successor_cluster]);
+        return idx(successor_cluster, offset, mytree_universe_size);
+      }
+    }
+  }
+}
+// 9. Reading until comma from the file
+string reader(FILE *input)
+{
+    string answer;
     char c;
     c=fgetc(input);
-    int i=0;
-    while (c!=',' || c!='\n')
+    while ((c!=',') && (c!='\n'))
     {
-        a[i]=c;
-        i++;
+      answer.push_back(c);
+      c=fgetc(input);
     }
-    a[i]='\n';
-    return;
+    answer.push_back('\n');
+    return answer;
+}
+// 10. Read the whole remaining line from file
+void readline(FILE *input)
+{
+  char c;
+  c=fgetc(input);
+  while (c!='\n')
+  {
+    c=fgetc(input);
+
+  }
+  return;
+}
+// 11. Convert string to an integer
+int stringtoint(string s)
+{
+  int answer=0;
+  int temp=0;
+  for (int i=0; s[i]!='\n'; i++)
+  {
+    temp = s[i]-'0';
+    answer=answer*10+temp;
+  }
+  return answer;
 }
 // End of Functions
 int main() 
-{
-    FILE *inputfile;
+{   FILE *inputfile;
     FILE *outputfile;
-    inputfile=fopen("smallsample-cs201-student-data.csv", "r");
+    char buffer[255];
+    inputfile=fopen("sample-student-data.txt", "r");
     outputfile=fopen("output.txt", "a");
     if (inputfile==NULL)
     {
         printf("File containing input cannot be opened.\n");
         exit(0);
     }
-    int mytree_universe_size = 4; //max marks
-    // student input
+    //max marks
+    string read;
+    read=reader(inputfile); //read "Maximum Marks"
+    read=reader(inputfile); //read the integer value
+    int max_marks=stringtoint(read);
+    fscanf(inputfile, "%s", buffer); //read the commas
+    fseek(inputfile, 2, SEEK_CUR); // seek to ignore \n
+    //max students input
+    read=reader(inputfile); //read "Total Students"
+    read=reader(inputfile); //read the integer value
+    mytree_universe_size=stringtoint(read);
+    fscanf(inputfile, "%s", buffer); //read the commas
+    fseek(inputfile, 2, SEEK_CUR); // seek to ignore \n
     //make marks array
-    //take student data
-    //append student to respective veb tree
-    //use successor logic to find out next rank and allot college based on preference.
-    //skipping the column names
-    char buffer[255];
-    vebtree* marks[2];
-    int tempmarks=0;
-    marks[0]=new vebtree(mytree_universe_size);
-    printf("Empty vEB Tree of universe size %d has been generated.\n", mytree_universe_size);
-    struct student_data person[4];
-    /*
-    fscanf(inputfile, "%s", buffer);
-    for (int i=0; i<4; i++)
-    {   
-        printf("ok0 ");
-        //reader(inputfile, buffer);
-        fscanf(inputfile, "%s", buffer);
-        printf("ok1 ");
-        tempmarks=atoi(buffer);
-        printf("ok2 ");
-        //reader(inputfile, buffer);
-        fscanf(inputfile, "%s", buffer);
-        strcpy(person[i].name,buffer);
-        //reader(inputfile, buffer);
-        fscanf(inputfile, "%s", buffer);
-        person[i].roll_number=atoi(buffer);
-        //fscanf(inputfile, "%s", buffer);
-        insert(marks[tempmarks], person[i].roll_number, &person[i]);
+    vebtree* Score[max_marks+1];
+    for (int i=0; i<max_marks+1; i++)
+    {
+      Score[i]=new vebtree(mytree_universe_size);
     }
-    */
+    //each student input
+    readline(inputfile);
+    //fseek(inputfile, 2, SEEK_CUR); // seek to ignore \n
+    for (int j=0; j<mytree_universe_size-1; j++)
+    {
+      studentptr temp_student=new struct student_data;
+      // student marks
+      read=reader(inputfile); //read the integer value
+      int person_marks=stringtoint(read);
+      // student name
+      read=reader(inputfile);
+      for (int i=0; i<20; i++)
+      {
+        temp_student->name[i]=read[i];
+      }
+      // student roll number
+      read=reader(inputfile);
+      temp_student->roll_number=stringtoint(read);
+      // student college choice data
+      while ((read=reader(inputfile))!=blank)
+      {
+        (temp_student->preference).push_back(stringtoint(read));
+      }
+      // student college allotted
+      temp_student->college_allotted=-1;
+      //append student to respective veb tree
+      insert(Score[person_marks], temp_student->roll_number, temp_student);
+      readline(inputfile); // seek through the commas
+    }
+    // inputting the last student.
+      studentptr temp_student=new struct student_data;
+      // student marks
+      read=reader(inputfile); //read the integer value
+      int person_marks=stringtoint(read);
+      // student name
+      read=reader(inputfile);
+      for (int i=0; i<20; i++)
+      {
+        temp_student->name[i]=read[i];
+      }
+      // student roll number
+      read=reader(inputfile);
+      temp_student->roll_number=stringtoint(read);
+      // student college choice data
+      while ((read=reader(inputfile))!=blank)
+      {
+        (temp_student->preference).push_back(stringtoint(read));
+      }
+      // student college allotted
+      temp_student->college_allotted=-1;
+      //append student to respective veb tree
+      insert(Score[person_marks], temp_student->roll_number, temp_student);
+    printf("Insertion to vEB trees complete.\n");
+    if (!(veb_members_check(Score[0], 1)))
+    {
+      printf("Not found.\n");
+    }
+    veb_members_check(Score[0], 3);
+    //printf("Successor of Roll 2: %d",veb_tree_successor(Score[4], 7));
+    // use successor logic to find out next rank and allot college based on preference.
     // college key input
+    // output the allotted colleges.
     return 0;
 }
   
