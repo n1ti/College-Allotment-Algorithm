@@ -7,6 +7,8 @@ vEB Tree: vEB Tree is a priority queue. Compared to other priority queues, it is
 
 Data: The sample data we used to test our implementation was random data we generated. We took a total of xxx random students. Their name, roll number, marks scored, and college/stream preference was stored. The number of seats available in each college/stream was also stored. Using this data, the students were allocated seats following the same procedure as that of JOSAA. 
 
+JOSAA: Stands for Joint Seat Allocation Authority. After students give the competitive examinations, their names, roll numbers and marks are stored. They are then asked to give their preferences of college/streams. Based on marks (rank), they are allocated a seat in their highest preferred college/stream- with the constraint of number of seats available in the college/stream.
+
 Sample Data Template: https://docs.google.com/spreadsheets/d/1WxYvlta2jwyDuRmctZeTJt4TIgS5obZxTd5qI3PE-ww/edit?usp=sharing
 
 Data Instructions: Using the template given above, create your own .csv file containing student & college data.
