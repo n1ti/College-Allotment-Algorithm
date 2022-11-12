@@ -189,7 +189,7 @@ int veb_tree_successor(vebtree *V, int x)
     if (max_in_cluster!=-1 && low(x, V->u)<max_in_cluster)
     {
       int offset=veb_tree_successor(V->cluster[high(x,V->u)], low(x, V->u));
-      return idx(high(x, V->u), offset, mytree_universe_size);
+      return idx(high(x, V->u), offset, V->u);
     }
     else
     {
@@ -201,7 +201,7 @@ int veb_tree_successor(vebtree *V, int x)
       else
       {
         int offset=veb_minimum(V->cluster[successor_cluster]);
-        return idx(successor_cluster, offset, mytree_universe_size);
+        return idx(successor_cluster, offset, V->u);
       }
     }
   }
