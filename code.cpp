@@ -249,7 +249,12 @@ void printer_student(studentptr person)
 {
   cout<<"Student Name: "<<person->name;
   cout<<"Student Roll No.: "<<person->roll_number<<'\n';
-  cout<<"College Allotted: "<<person->college_allotted<<'\n';
+  cout<<"College Allotted: ";
+  if (person->college_allotted!=-1)
+  {
+    cout<<C[person->college_allotted].name;
+  }
+  else cout<<"None.\n";
   return;
 }
 // 13. Function that gives a student pointer of the index entered.
@@ -392,7 +397,7 @@ int main()
         college_allotter(human, colleges);
         previous_roll=next_roll;
         next_roll=veb_tree_successor(Score[i], previous_roll);
-        printer_student(human);
+        printer_student(human, colleges);
       }
       i--;
       previous_roll=0;
