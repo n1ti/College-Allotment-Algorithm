@@ -1,0 +1,12 @@
+Total Courses,10,[college-code-does-not-have-to-be-in-order],EOF1,EOF2
+Code,Key,Seats,,
+1,College A Stream 1,13,,
+2,College A Stream 2,13,,
+3,College B Stream 1,12,,
+4,College B Stream 2,13,,
+5,College C Stream 1,12,,
+6,College C Stream 2,13,,
+7,College D Stream 1,12,,
+8,College D Stream 2,13,,
+9,College E Stream 1,13,,
+10,College E Stream 2,13,,
