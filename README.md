@@ -1,4 +1,4 @@
-# CS201Project
+# College Allotment using vEB Trees
 Analysis and Implementation of van Emde Boas Trees for our course CS201: Data Structures and Algorithms
 
 During this project, we worked with the data structure van Emde Boas (vEB) Trees. We chose to implement the JOSAA admission procedure with sample data.
