@@ -245,7 +245,7 @@ int stringtoint(string s)
   return answer;
 }
 // 12. Print student data
-void printer_student(studentptr person)
+void printer_student(studentptr person, struct college_data C[])
 {
   cout<<"Student Name: "<<person->name;
   cout<<"Student Roll No.: "<<person->roll_number<<'\n';
